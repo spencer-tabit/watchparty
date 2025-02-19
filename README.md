@@ -19,8 +19,6 @@ The app follows a clean and modern UI with the following design choices:
 - **Secondary Color**: Soft Lavender (`#D8BFD8`) – Used for headers and subtle contrast.
 - **Accent Color**: Vibrant Coral (`#FF6F61`) – Used for buttons and interactive elements.
 
-```
-
 ## Running WatchParty
 1. **Clone the repository**
    ```sh
