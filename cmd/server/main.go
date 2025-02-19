@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 )
@@ -9,19 +9,30 @@ import (
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/":
-		w.Write([]byte("Welcome to WatchParty!"))
+		tmpl, err := template.ParseFiles("templates/index.html")
+		if err != nil {
+			http.Error(w, "Error loading template", http.StatusInternalServerError)
+			return
+		}
+		tmpl.Execute(w, nil)
 	default:
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Page not found!"))
+		tmpl, err := template.ParseFiles("templates/404.html")
+		if err != nil {
+			http.Error(w, "Error loading template", http.StatusInternalServerError)
+		}
+		tmpl.Execute(w, nil)
 	}
 }
 
 func main() {
 	mux := http.NewServeMux()
 
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
 	mux.HandleFunc("/", homeHandler)
 
 	port := ":8080"
-	fmt.Println("WatchParty server running on http://localhost:" + port)
+	log.Println("WatchParty server running on http://localhost:" + port)
 	log.Fatal(http.ListenAndServe(port, mux))
 }
